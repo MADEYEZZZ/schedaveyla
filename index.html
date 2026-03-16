@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="it"><head>
+<html lang="it">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Veyla | La Scheda!</title>
   
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,400&amp;family=Montserrat:wght@200;400&amp;family=Playfair+Display:ital,wght@0,400;1,400&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,400&family=Montserrat:wght@200;400&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
@@ -21,13 +22,9 @@
     body { background: var(--ivory); color: var(--deep-grey); font-family: var(--font-serif); overflow: hidden; height: 100vh; }
 
     /* --- TOP BAR --- */
-    .top-bar {
-      position: fixed; top: 0; width: 100%; height: 60px; background: white;
-      border-bottom: 1px solid var(--silk-border); z-index: 100;
-      display: flex; align-items: center; justify-content: space-between; padding: 0 40px;
-    }
+    .top-bar { position: fixed; top: 0; width: 100%; height: 60px; background: white; border-bottom: 1px solid var(--silk-border); z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; }
     .music-controls { display: flex; align-items: center; gap: 15px; flex: 1; }
-    #toggle-play { background: none; border: 1px solid var(--dust-rose); color: var(--dust-rose); width: 35px; height: 35px; border-radius: 50%; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
+    #toggle-play { background: none; border: 1px solid var(--dust-rose); color: var(--dust-rose); width: 35px; height: 35px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
     #toggle-play:hover { background: var(--dust-rose); color: white; }
     .marquee-box { flex: 0.6; overflow: hidden; margin-left: 20px; }
     .marquee-text { display: inline-block; white-space: nowrap; animation: scroll 15s linear infinite; font-family: 'Montserrat'; font-size: 0.6rem; letter-spacing: 3px; color: var(--dust-rose); text-transform: uppercase; }
@@ -40,183 +37,153 @@
     .avatar-frame img { width: 100%; height: 100%; object-fit: cover; filter: sepia(0.1); }
     
     .nav-link { width: 100%; background: none; border: none; padding: 12px 0; text-align: left; font-family: 'Montserrat'; font-size: 0.6rem; letter-spacing: 3px; color: #aaa; cursor: pointer; transition: 0.4s; border-bottom: 1px solid transparent; text-transform: uppercase; }
-    .nav-link:hover, .nav-link.active { color: var(--dust-rose); border-bottom: 1px solid var(--dust-rose); }
+    .nav-link.active { color: var(--dust-rose); border-bottom: 1px solid var(--dust-rose); }
 
     .content-viewport { overflow-y: auto; padding: 60px 8%; position: relative; scroll-behavior: smooth; }
     .view { display: none; }
     .view.active { display: block; animation: fadeIn 0.8s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } }
-
     h1.sec-title { font-family: var(--font-display); font-size: 3.5rem; font-style: italic; font-weight: 400; color: var(--dust-rose); margin-bottom: 40px; }
 
-    /* --- ARCHIVIO --- */
-    .acc-item { border-bottom: 1px solid var(--silk-border); margin-bottom: 10px; }
-    .acc-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 20px 0; transition: 0.3s; }
-    .acc-header h3 { font-family: var(--font-display); font-size: 1.8rem; font-weight: 400; }
-    .acc-content { max-height: 0; overflow: hidden; transition: max-height 0.6s ease-out; }
-    .acc-content.open { max-height: 10000px; padding: 20px 0 40px; }
-    .role-img { width: 100%; max-height: 500px; object-fit: cover; margin-bottom: 25px; border: 1px solid var(--silk-border); }
-    .acc-body { font-size: 1.35rem; line-height: 1.8; text-align: justify; white-space: pre-wrap; }
+    /* --- L'ECO DI SETA (ARITMANZIA) --- */
+    .magic-square { display: grid; grid-template-columns: repeat(3, 60px); gap: 10px; margin: 40px auto; width: fit-content; }
+    .num-cell { width: 60px; height: 60px; border: 1px solid var(--silk-border); display: flex; align-items: center; justify-content: center; font-family: 'Montserrat'; font-size: 0.8rem; color: var(--dust-rose); transition: 0.5s; cursor: pointer; }
+    .num-cell:hover { background: var(--dust-rose); color: white; transform: rotate(45deg); }
+    #eco-list { display: none; margin-top: 40px; opacity: 0; transition: 1s; }
+    .eco-item { border-bottom: 1px solid var(--silk-border); padding: 20px 0; cursor: pointer; }
+    .eco-item h4 { font-family: var(--font-display); font-size: 1.8rem; font-weight: 400; transition: 0.3s; }
+    .eco-item:hover h4 { color: var(--dust-rose); padding-left: 10px; }
+    .eco-detail { display: none; margin-top: 20px; animation: fadeIn 0.5s; }
+    .eco-detail img { width: 100%; max-height: 400px; object-fit: cover; border: 1px solid var(--silk-border); margin-bottom: 15px; }
 
-    /* --- GRIDS --- */
+    /* --- GRIDS & CARDS --- */
     .standard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
     .info-card { background: white; border: 1px solid var(--silk-border); padding: 25px; }
     .info-card h4 { font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 10px; color: var(--dust-rose); }
     .tag { font-family: 'Montserrat'; font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; color: #bbb; display: block; margin-bottom: 5px; }
 
-    /* --- PANNELLO --- */
-    .vault-overlay { position: fixed; inset: 0; background: white; z-index: 1000; display: none; padding: 50px; overflow-y: auto; }
+    /* --- VAULT (ADMIN) --- */
+    .vault-overlay { position: fixed; inset: 0; background: white; z-index: 2000; display: none; padding: 50px; overflow-y: auto; }
     .vault-tabs { display: flex; gap: 20px; border-bottom: 1px solid #eee; margin-bottom: 30px; flex-wrap: wrap; }
     .v-tab-btn { padding: 10px 0; background: none; border: none; font-family: 'Montserrat'; font-size: 0.65rem; letter-spacing: 2px; cursor: pointer; color: #ccc; text-transform: uppercase; }
     .v-tab-btn.active { color: var(--dust-rose); border-bottom: 2px solid var(--dust-rose); }
     .admin-box { background: #fcfcfc; border: 1px solid #eee; padding: 25px; margin-bottom: 30px; }
     input, textarea, select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; font-family: var(--font-serif); font-size: 1rem; }
     .btn-main { background: var(--deep-grey); color: white; border: none; padding: 12px 25px; cursor: pointer; font-family: 'Montserrat'; font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; margin-right: 10px; margin-bottom: 10px; }
-    .btn-main:hover { background: var(--dust-rose); }
-    .btn-sync { background: #d4a5a5; color: white; border: none; padding: 12px 25px; cursor: pointer; font-family: 'Montserrat'; font-weight: bold; font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; }
-    .admin-list-item { display: flex; justify-content: space-between; background: white; padding: 12px; border: 1px solid #eee; margin-bottom: 5px; font-size: 0.8rem; font-family: 'Montserrat'; align-items: center; }
+    .btn-sync { background: #d4a5a5; color: white; border: none; padding: 12px 25px; cursor: pointer; font-family: 'Montserrat'; font-weight: bold; font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; width: 100%; }
 
     #yt-hidden { position: absolute; top: -1000px; visibility: hidden; }
   </style>
 </head>
 <body>
 
-  <iframe id="yt-hidden" frameborder="0" allowfullscreen="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" title="Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)" width="0" height="0" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&amp;loop=1&amp;playlist=dQw4w9WgXcQ&amp;enablejsapi=1&amp;origin=https%3A%2F%2Fmadeyezzz.github.io&amp;widgetid=1&amp;forigin=https%3A%2F%2Fmadeyezzz.github.io%2Fschedaveyla%2F&amp;aoriginsup=1&amp;gporigin=https%3A%2F%2Fgithub.com%2FMADEYEZZZ%2Fschedaveyla%2Fsettings%2Fpages&amp;vf=1"></iframe>
+  <div id="yt-hidden"></div>
 
   <header class="top-bar">
     <div class="music-controls">
       <button id="toggle-play" onclick="controlMusic()"><i class="fa-solid fa-play"></i></button>
-      <div class="marquee-box"><div class="marquee-text" id="ui-track">Lily Allen - Smile!</div></div>
+      <div class="marquee-box"><div class="marquee-text" id="ui-track">Caricamento traccia...</div></div>
     </div>
     <div style="font-family: 'Montserrat'; font-size: 0.6rem; letter-spacing: 4px; color: #999;">VEYLA HAWSTEIN</div>
   </header>
 
   <div class="app-wrapper">
     <aside class="sidebar">
-      <div class="avatar-frame"><img id="v-avatar" src="https://i.imgur.com/6LagXCI.png"></div>
-      <h2 id="v-name-side" style="font-family: var(--font-display); font-size: 1.3rem; letter-spacing: 4px; text-align: center; font-weight: 400; margin-bottom: 20px;">VEYLA CÉLESTE HAWSTEIN-ENGSTROM!</h2>
+      <div class="avatar-frame"><img id="v-avatar" src=""></div>
+      <h2 id="v-name-side" style="font-family: var(--font-display); font-size: 1.3rem; letter-spacing: 4px; text-align: center; font-weight: 400; margin-bottom: 20px;"></h2>
       <nav style="width: 100%;">
         <button class="nav-link active" onclick="swView('v-bio')">Essenza</button>
         <button class="nav-link" onclick="swView('v-arch')">Archivio Role</button>
+        <button class="nav-link" onclick="swView('v-eco')">L'Eco di Seta</button>
         <button class="nav-link" onclick="swView('v-bond')">Legami</button>
-        <button class="nav-link" onclick="swView('v-tal')">Talenti &amp; Spec</button>
+        <button class="nav-link" onclick="swView('v-tal')">Talenti & Spec</button>
         <button class="nav-link" onclick="swView('v-inv')">Inventario</button>
         <button class="nav-link" onclick="swView('v-dark')">Oscurità</button>
-        <button class="nav-link" onclick="swView('v-owl')">Pensieri</button>
       </nav>
-      <button onclick="openAdmin()" style="margin-top: auto; background: none; border: none; color: #ddd; font-size: 0.6rem; cursor: pointer; letter-spacing: 2px; text-transform: uppercase;">— Il Sigillo d'Avorio —</button>
+      <button onclick="openAdmin()" style="margin-top: auto; background: none; border: none; color: #eee; font-size: 0.6rem; cursor: pointer; letter-spacing: 2px; text-transform: uppercase;">— Il Sigillo d'Avorio —</button>
     </aside>
 
     <main class="content-viewport">
-      <section id="v-bio" class="view active"><h1 class="sec-title">Essenza</h1><div class="acc-body" id="d-bio">Veyla Céleste Hawstein-Engstrom è cresciuta in una casa dove il rumore delle risate si mescolava sempre al fruscio della carta velina e al ticchettio secco delle piume d'oca sui calcoli. Suo padre, Gaillard Engstrom, la sollevava di peso appena rientrato dal Ministero, ancora con il profumo del vento e del cuoio degli Hit-Wizard addosso, ridendo forte mentre le spettinava i capelli biondi. Lui era la sua ancora di allegria, l’uomo che trasformava ogni angolo dell'Ufficio Misteri in un castello da esplorare quando la portava con sé, facendole l'occhiolino come se la magia fosse, prima di tutto, un gioco bellissimo da fare insieme. Eppure, tra una corsa in giardino e un biscotto rubato in cucina, Veyla sentiva il richiamo più sottile delle "ombre" di famiglia. Seduta sul tappeto dello studio di sua madre, Glaphira, la bambina passava ore a osservare le sequenze numeriche che riempivano le pergamene di Aritmanzia. Voleva disperatamente essere all'altezza di quel nome, Hawstein, che evocava la precisione millimetrica di nonno Zeno e il prestigio di un ex Ministro. Così, quasi per gioco ma con una serietà che le faceva aggrottare la fronte, Veyla imitava i gesti della madre, cercando di dare un senso a quelle griglie numeriche, convinta che se fosse riuscita a padroneggiare i numeri, avrebbe posseduto la chiave per rendere tutti orgogliosi.<br><br>[..]<br><br>C'erano però dei momenti, in quel periodo prima di Hogwarts, in cui l'allegria sembrava appannarsi. Accadeva quando i calcoli non tornavano, o quando sentiva il peso invisibile di dover essere "perfetta" come la madre, con quel sangue di Veela che rendeva Glaphira luminosa e quasi intoccabile. In quei pomeriggi, Veyla si guardava allo specchio del corridoio e provava una punta di sconforto, un senso di inadeguatezza che le stringeva la gola: temeva che la sua magia non sarebbe stata mai abbastanza precisa, o che la sua bellezza non avrebbe mai brillato con la stessa intensità naturale. Si sentiva piccola tra due giganti, una creatura fatta di numeri che non sempre volevano farsi sommare. Ma poi arrivava un altro dei sorrisi di Gaillard, o una carezza distratta ma calda di Glaphira, e l'ombra passava. Veyla tornava a riempire il suo baule con un entusiasmo contagioso, infilando tra i libri di testo anche i suoi appunti scarabocchiati, convinta che a scuola avrebbe finalmente dimostrato di essere una vera Hawstein, oltre che una Engstrom. Aveva voglia di correre, di scoprire se la sua bacchetta avrebbe risposto con la stessa velocità dei suoi pensieri, e l'idea del castello la faceva saltare sul posto per l'impazienza, scacciando via ogni dubbio con un balzo.</div></section>
+      <section id="v-bio" class="view active"><h1 class="sec-title">Essenza</h1><div id="d-bio" style="font-size:1.35rem; line-height:1.8; white-space:pre-wrap; text-align:justify;"></div></section>
+      
+      <section id="v-eco" class="view">
+        <h1 class="sec-title">L'Eco di Seta</h1>
+        <p style="text-align:center; font-style:italic; letter-spacing:2px; color:#bbb;">Risolvi l'equazione del Bureau per rivelare le stampe.</p>
+        <div class="magic-square" id="m-square">
+            <div class="num-cell" onclick="revealEco()">4</div><div class="num-cell" onclick="revealEco()">9</div><div class="num-cell" onclick="revealEco()">2</div>
+            <div class="num-cell" onclick="revealEco()">3</div><div class="num-cell" onclick="revealEco()">5</div><div class="num-cell" onclick="revealEco()">7</div>
+            <div class="num-cell" onclick="revealEco()">8</div><div class="num-cell" onclick="revealEco()">1</div><div class="num-cell" onclick="revealEco()">6</div>
+        </div>
+        <div id="eco-list"></div>
+      </section>
+
       <section id="v-arch" class="view"><h1 class="sec-title">Archivio Role</h1><div id="render-arch"></div></section>
-      <section id="v-bond" class="view"><h1 class="sec-title">Legami</h1><div class="standard-grid" id="render-bond"><div class="info-card"><span class="tag">Padre!!</span><h4>Gaillard Engstrom.</h4><p></p></div><div class="info-card"><span class="tag">Madre!!</span><h4>Glaphira Hawstein.</h4><p></p></div><div class="info-card"><span class="tag">Fratello Maggiore!</span><h4>Yashiro Isana-Mortem</h4><p></p></div><div class="info-card"><span class="tag">Fratello Gemello!</span><h4>Cygnus Hawstein-Engstrom</h4><p></p></div><div class="info-card"><span class="tag">Nonno!!</span><h4>Zeno Hawstein</h4><p></p></div></div></section>
-      <section id="v-tal" class="view"><h1 class="sec-title">Talenti &amp; Specializzazioni</h1><div class="standard-grid" id="render-tal"></div></section>
+      <section id="v-bond" class="view"><h1 class="sec-title">Legami</h1><div class="standard-grid" id="render-bond"></div></section>
+      <section id="v-tal" class="view"><h1 class="sec-title">Talenti & Spec</h1><div class="standard-grid" id="render-tal"></div></section>
       <section id="v-inv" class="view"><h1 class="sec-title">Inventario</h1><div class="standard-grid" id="render-inv"></div></section>
       <section id="v-dark" class="view"><h1 class="sec-title">Oscurità</h1><div class="standard-grid" id="render-dark"></div></section>
-      <section id="v-owl" class="view">
-        <h1 class="sec-title">Pensieri</h1>
-        <div id="render-guest" style="margin-bottom: 40px;"></div>
-        <input type="text" id="g-name" placeholder="Firma">
-        <textarea id="g-msg" placeholder="Scrivi un pensiero..."></textarea>
-        <button class="btn-main" onclick="addGuest()">Invia</button>
-      </section>
     </main>
   </div>
 
-  <div class="vault-overlay" id="admin-ui" style="display: block;">
+  <div class="vault-overlay" id="admin-ui">
     <div class="vault-tabs">
-      <button class="v-tab-btn active" onclick="swTab('adm-gen')">Generale &amp; Sync</button>
+      <button class="v-tab-btn active" onclick="swTab('adm-gen')">Generale</button>
+      <button class="v-tab-btn" onclick="swTab('adm-eco')">L'Eco di Seta</button>
       <button class="v-tab-btn" onclick="swTab('adm-arch')">Role</button>
       <button class="v-tab-btn" onclick="swTab('adm-bond')">Legami</button>
-      <button class="v-tab-btn" onclick="swTab('adm-tal')">Talenti</button>
-      <button class="v-tab-btn" onclick="swTab('adm-inv')">Inventario</button>
-      <button class="v-tab-btn" onclick="swTab('adm-dark')">Oscurità</button>
       <button class="v-tab-btn" style="margin-left:auto; color:red" onclick="closeAdmin()">Esci</button>
     </div>
 
-    <div id="adm-gen" class="adm-panel" style="display: block;">
-      <div class="admin-box">
-        <h3>Dati Personaggio</h3><br>
-        <input type="text" id="in-name" placeholder="Nome">
-        <input type="text" id="in-av" placeholder="Avatar URL">
-        <input type="text" id="in-yt" placeholder="YouTube Video ID">
-        <input type="text" id="in-track" placeholder="Titolo Traccia">
-        <textarea id="in-bio" placeholder="Biografia" rows="10"></textarea>
-        <button class="btn-main" onclick="saveGen()">Salva Locale</button>
-        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-        <h3>Pubblicazione</h3><p style="font-size: 0.8rem; color: #888; margin-bottom: 10px;">Clicca qui sotto per copiare il codice aggiornato da incollare su GitHub per tutti gli altri.</p>
-        <button class="btn-sync" onclick="exportForGithub()">Sincronizza per il Mondo (GitHub)</button>
-      </div>
+    <div id="adm-gen" class="adm-panel">
+        <div class="admin-box">
+            <input type="text" id="in-name" placeholder="Nome"><input type="text" id="in-av" placeholder="Avatar URL"><input type="text" id="in-yt" placeholder="YT ID"><input type="text" id="in-track" placeholder="Titolo Canzone">
+            <textarea id="in-bio" placeholder="Bio" rows="8"></textarea>
+            <button class="btn-main" onclick="saveGen()">Salva Locale</button>
+            <hr style="margin:20px 0; border:0; border-top:1px solid #eee;">
+            <button class="btn-sync" onclick="exportForGithub()">Sincronizza Mondo (GitHub)</button>
+        </div>
     </div>
+
+    <div id="adm-eco" class="adm-panel" style="display:none">
+        <div class="admin-box"><input type="hidden" id="edit-eco-idx" value="-1"><input type="text" id="eco-t" placeholder="Titolo"><input type="text" id="eco-i" placeholder="URL Immagine"><input type="text" id="eco-p" placeholder="URL PDF"><textarea id="eco-d" placeholder="Didascalia"></textarea><button class="btn-main" onclick="saveItem('ecos',['t','i','p','d'],'eco')">Salva Edizione</button></div>
+        <div id="list-eco"></div>
+    </div>
+
     <div id="adm-arch" class="adm-panel" style="display:none">
-      <div class="admin-box"><input type="hidden" id="edit-arch-idx" value="-1"><input type="text" id="arch-t" placeholder="Titolo"><input type="text" id="arch-d" placeholder="Data"><input type="text" id="arch-i" placeholder="Link Immagine"><textarea id="arch-c" placeholder="Testo..." rows="8"></textarea><button class="btn-main" onclick="saveItem('roles',['t','d','i','c'],'arch')">Salva Role</button></div>
-      <div id="list-arch"></div>
+        <div class="admin-box"><input type="hidden" id="edit-arch-idx" value="-1"><input type="text" id="arch-t" placeholder="Titolo"><input type="text" id="arch-d" placeholder="Data"><input type="text" id="arch-i" placeholder="Immagine"><textarea id="arch-c" placeholder="Testo"></textarea><button class="btn-main" onclick="saveItem('roles',['t','d','i','c'],'arch')">Salva</button></div>
+        <div id="list-arch"></div>
     </div>
-    <div id="adm-bond" class="adm-panel" style="display: none;">
-      <div class="admin-box"><input type="hidden" id="edit-bond-idx" value="-1"><input type="text" id="bond-n" placeholder="Nome"><input type="text" id="bond-r" placeholder="Relazione"><textarea id="bond-d" placeholder="Descrizione"></textarea><button class="btn-main" onclick="saveItem('bonds',['n','r','d'],'bond')">Salva</button></div>
-      <div id="list-bond"><div class="admin-list-item"><span>Gaillard Engstrom.</span><div><button class="btn-main" style="padding:5px" onclick="startEdit('bonds','bond',[" n","r","d"],0)"="">Edit</button><button class="btn-main" style="padding:5px; background:red" onclick="delItem('bonds',0)">Del</button></div></div><div class="admin-list-item"><span>Glaphira Hawstein.</span><div><button class="btn-main" style="padding:5px" onclick="startEdit('bonds','bond',[" n","r","d"],1)"="">Edit</button><button class="btn-main" style="padding:5px; background:red" onclick="delItem('bonds',1)">Del</button></div></div><div class="admin-list-item"><span>Yashiro Isana-Mortem</span><div><button class="btn-main" style="padding:5px" onclick="startEdit('bonds','bond',[" n","r","d"],2)"="">Edit</button><button class="btn-main" style="padding:5px; background:red" onclick="delItem('bonds',2)">Del</button></div></div><div class="admin-list-item"><span>Cygnus Hawstein-Engstrom</span><div><button class="btn-main" style="padding:5px" onclick="startEdit('bonds','bond',[" n","r","d"],3)"="">Edit</button><button class="btn-main" style="padding:5px; background:red" onclick="delItem('bonds',3)">Del</button></div></div><div class="admin-list-item"><span>Zeno Hawstein</span><div><button class="btn-main" style="padding:5px" onclick="startEdit('bonds','bond',[" n","r","d"],4)"="">Edit</button><button class="btn-main" style="padding:5px; background:red" onclick="delItem('bonds',4)">Del</button></div></div></div>
-    </div>
-    <div id="adm-tal" class="adm-panel" style="display:none">
-      <div class="admin-box"><input type="hidden" id="edit-tal-idx" value="-1"><input type="text" id="tal-n" placeholder="Nome"><select id="tal-t"><option value="Talento">Talento</option><option value="Specializzazione">Specializzazione</option></select><textarea id="tal-d" placeholder="Descrizione"></textarea><button class="btn-main" onclick="saveItem('talents',['n','t','d'],'tal')">Salva</button></div>
-      <div id="list-tal"></div>
-    </div>
-    <div id="adm-inv" class="adm-panel" style="display:none">
-      <div class="admin-box"><input type="hidden" id="edit-inv-idx" value="-1"><input type="text" id="inv-n" placeholder="Oggetto"><textarea id="inv-d" placeholder="Proprietà"></textarea><button class="btn-main" onclick="saveItem('inv',['n','d'],'inv')">Salva</button></div>
-      <div id="list-inv"></div>
-    </div>
-    <div id="adm-dark" class="adm-panel" style="display:none">
-      <div class="admin-box"><input type="hidden" id="edit-dark-idx" value="-1"><input type="text" id="dark-n" placeholder="Titolo"><select id="dark-t"><option value="Danno">Danno</option><option value="Marchio">Marchio</option><option value="Maledizione">Maledizione</option></select><textarea id="dark-d" placeholder="Effetti"></textarea><button class="btn-main" onclick="saveItem('dark',['n','t','d'],'dark')">Salva</button></div>
-      <div id="list-dark"></div>
+
+    <div id="adm-bond" class="adm-panel" style="display:none">
+        <div class="admin-box"><input type="hidden" id="edit-bond-idx" value="-1"><input type="text" id="bond-n" placeholder="Nome"><input type="text" id="bond-r" placeholder="Relazione"><textarea id="bond-d" placeholder="Descrizione"></textarea><button class="btn-main" onclick="saveItem('bonds',['n','r','d'],'bond')">Salva</button></div>
+        <div id="list-bond"></div>
     </div>
   </div>
 
-  <script type="text/javascript" id="www-widgetapi-script" src="https://www.youtube.com/s/player/74edf1a3/www-widgetapi.vflset/www-widgetapi.js" async=""></script><script src="https://www.youtube.com/iframe_api"></script>
-  <script id="data-script">
-    let db = JSON.parse(localStorage.getItem('veyla_soul_v7')) || {
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script>
+    let db = JSON.parse(localStorage.getItem('veyla_soul_v9')) || {
   "name": "Veyla Céleste Hawstein-Engstrom!",
   "av": "https://i.imgur.com/6LagXCI.png",
   "yt": "0WxDrVUrSvI",
   "track": "Lily Allen - Smile!",
-  "bio": "Veyla Céleste Hawstein-Engstrom è cresciuta in una casa dove il rumore delle risate si mescolava sempre al fruscio della carta velina e al ticchettio secco delle piume d'oca sui calcoli. Suo padre, Gaillard Engstrom, la sollevava di peso appena rientrato dal Ministero, ancora con il profumo del vento e del cuoio degli Hit-Wizard addosso, ridendo forte mentre le spettinava i capelli biondi. Lui era la sua ancora di allegria, l’uomo che trasformava ogni angolo dell'Ufficio Misteri in un castello da esplorare quando la portava con sé, facendole l'occhiolino come se la magia fosse, prima di tutto, un gioco bellissimo da fare insieme. Eppure, tra una corsa in giardino e un biscotto rubato in cucina, Veyla sentiva il richiamo più sottile delle \"ombre\" di famiglia. Seduta sul tappeto dello studio di sua madre, Glaphira, la bambina passava ore a osservare le sequenze numeriche che riempivano le pergamene di Aritmanzia. Voleva disperatamente essere all'altezza di quel nome, Hawstein, che evocava la precisione millimetrica di nonno Zeno e il prestigio di un ex Ministro. Così, quasi per gioco ma con una serietà che le faceva aggrottare la fronte, Veyla imitava i gesti della madre, cercando di dare un senso a quelle griglie numeriche, convinta che se fosse riuscita a padroneggiare i numeri, avrebbe posseduto la chiave per rendere tutti orgogliosi.\n\n[..]\n\nC'erano però dei momenti, in quel periodo prima di Hogwarts, in cui l'allegria sembrava appannarsi. Accadeva quando i calcoli non tornavano, o quando sentiva il peso invisibile di dover essere \"perfetta\" come la madre, con quel sangue di Veela che rendeva Glaphira luminosa e quasi intoccabile. In quei pomeriggi, Veyla si guardava allo specchio del corridoio e provava una punta di sconforto, un senso di inadeguatezza che le stringeva la gola: temeva che la sua magia non sarebbe stata mai abbastanza precisa, o che la sua bellezza non avrebbe mai brillato con la stessa intensità naturale. Si sentiva piccola tra due giganti, una creatura fatta di numeri che non sempre volevano farsi sommare. Ma poi arrivava un altro dei sorrisi di Gaillard, o una carezza distratta ma calda di Glaphira, e l'ombra passava. Veyla tornava a riempire il suo baule con un entusiasmo contagioso, infilando tra i libri di testo anche i suoi appunti scarabocchiati, convinta che a scuola avrebbe finalmente dimostrato di essere una vera Hawstein, oltre che una Engstrom. Aveva voglia di correre, di scoprire se la sua bacchetta avrebbe risposto con la stessa velocità dei suoi pensieri, e l'idea del castello la faceva saltare sul posto per l'impazienza, scacciando via ogni dubbio con un balzo.",
+  "bio": "Veyla Céleste Hawstein-Engstrom è cresciuta in una casa dove il rumore delle risate si mescolava sempre al fruscio della carta velina e al ticchettio secco delle piume d'oca sui calcoli. Suo padre, Gaillard Engstrom, la sollevava di peso appena rientrato dal Ministero, ancora con il profumo del vento e del cuoio degli Hit-Wizard addosso, ridendo forte mentre le spettinava i capelli biondi. Lui era la sua ancora di allegria, l’uomo che trasformava ogni angolo dell'Ufficio Misteri in un castello da esplorare quando la portava con sé, facendole l'occhiolino come se la magia fosse, prima di tutto, un gioco bellissimo da fare insieme. Eppure, tra una corsa in giardino e un biscotto rubato in cucina, Veyla sentiva il richiamo più sottile delle \"ombre\" di famiglia. Seduta sul tappeto dello studio di sua madre, Glaphira, la bambina passava ore a osservare le sequenze numeriche che riempivano le pergamene di Aritmanzia. Voleva disperatamente essere all'altezza di quel nome, Hawstein, che evocava la precisione millimetrica di nonno Zeno e il prestigio di un ex Ministro. Così, quasi per gioco ma con una serietà che le faceva aggrottare la fronte, Veyla imitava i gesti della madre, cercando di dare un senso a quelle griglie numeriche, convinta che se fosse riuscita a padroneggiare i numeri, avrebbe posseduto la chiave per rendere tutti orgogliosi.\n\n[..]\n\nC'erano però dei momenti, in quel periodo prima di Hogwarts, in cui l'allegria sembrava appannarsi. Accadeva quando i calcoli non tornavano, o quando sentiva il peso invisibile di dover essere \"perfetta\" come la madre, con quel sangue di Veela che rendeva Glaphira luminosa e quasi intoccabile. In quei pomergi, Veyla si guardava allo specchio del corridoio e provava una punta di sconforto, un senso di inadeguatezza che le stringeva la gola: temeva che la sua magia non sarebbe stata mai abbastanza precisa, o che la sua bellezza non avrebbe mai brillato con la stessa intensità naturale. Si sentiva piccola tra due giganti, una creatura fatta di numeri che non sempre volevano farsi sommare. Ma poi arrivava un altro dei sorrisi di Gaillard, o una carezza distratta ma calda di Glaphira, e l'ombra passava. Veyla tornava a riempire il suo baule con un entusiasmo contagioso, infilando tra i libri di testo anche i suoi appunti scarabocchiati, convinta che a scuola avrebbe finalmente dimostrato di essere una vera Hawstein, oltre che una Engstrom. Aveva voglia di correre, di scoprire se la sua bacchetta avrebbe risposto con la stessa velocità dei suoi pensieri, e l'idea del castello la faceva saltare sul posto per l'impazienza, scacciando via ogni dubbio con un balzo.",
   "roles": [],
+  "ecos": [],
   "bonds": [
-    {
-      "n": "Gaillard Engstrom.",
-      "r": "Padre!!",
-      "d": ""
-    },
-    {
-      "n": "Glaphira Hawstein.",
-      "r": "Madre!!",
-      "d": ""
-    },
-    {
-      "n": "Yashiro Isana-Mortem",
-      "r": "Fratello Maggiore!",
-      "d": ""
-    },
-    {
-      "n": "Cygnus Hawstein-Engstrom",
-      "r": "Fratello Gemello!",
-      "d": ""
-    },
-    {
-      "n": "Zeno Hawstein",
-      "r": "Nonno!!",
-      "d": ""
-    }
+    { "n": "Gaillard Engstrom.", "r": "Padre!!", "d": "" },
+    { "n": "Glaphira Hawstein.", "r": "Madre!!", "d": "" },
+    { "n": "Yashiro Isana-Mortem", "r": "Fratello Maggiore!", "d": "" },
+    { "n": "Cygnus Hawstein-Engstrom", "r": "Fratello Gemello!", "d": "" },
+    { "n": "Zeno Hawstein", "r": "Nonno!!", "d": "" }
   ],
   "talents": [],
   "inv": [],
-  "dark": [],
-  "guest": []
+  "dark": []
 };
 
     let player;
-    function onYouTubeIframeAPIReady() {
-      player = new YT.Player('yt-hidden', { height: '0', width: '0', videoId: db.yt, playerVars: { 'autoplay': 1, 'loop': 1, 'playlist': db.yt }, events: { 'onReady': (e) => e.target.playVideo() } });
-    }
+    function onYouTubeIframeAPIReady() { player = new YT.Player('yt-hidden', { height: '0', width: '0', videoId: db.yt, playerVars: { 'autoplay': 1, 'loop': 1, 'playlist': db.yt }, events: { 'onReady': (e) => e.target.playVideo() } }); }
     function controlMusic() { if(!player) return; const s = player.getPlayerState(); if(s == 1) { player.pauseVideo(); document.getElementById('toggle-play').innerHTML = '<i class="fa-solid fa-play"></i>'; } else { player.playVideo(); document.getElementById('toggle-play').innerHTML = '<i class="fa-solid fa-pause"></i>'; } }
 
     function render() {
@@ -224,30 +191,36 @@
       document.getElementById('v-name-side').innerText = db.name.toUpperCase();
       document.getElementById('ui-track').innerText = db.track;
       document.getElementById('d-bio').innerText = db.bio;
-      document.getElementById('render-arch').innerHTML = db.roles.map((r,i) => `<div class="acc-item"><div class="acc-header" onclick="this.nextElementSibling.classList.toggle('open')"><h3>${r.t}</h3><span>${r.d}</span></div><div class="acc-content">${r.i ? `<img src="${r.i}" class="role-img" onerror="this.style.display='none'">` : ''}<div class="acc-body">${r.c}</div></div></div>`).join('');
-      const build = (id, data, tpl) => document.getElementById(id).innerHTML = data.map(tpl).join('');
-      build('render-bond', db.bonds, b => `<div class="info-card"><span class="tag">${b.r}</span><h4>${b.n}</h4><p>${b.d}</p></div>`);
-      build('render-tal', db.talents, t => `<div class="info-card"><span class="tag">${t.t}</span><h4>${t.n}</h4><p>${t.d}</p></div>`);
-      build('render-inv', db.inv, i => `<div class="info-card"><span class="tag">Oggetto</span><h4>${i.n}</h4><p>${i.d}</p></div>`);
-      build('render-dark', db.dark, d => `<div class="info-card"><span class="tag">${d.t}</span><h4>${d.n}</h4><p>${d.d}</p></div>`);
-      build('render-guest', db.guest, g => `<div style="margin-bottom:15px; border-left:1px solid #d4a5a5; padding-left:10px"><em>"${g.m}"</em><br><small>— ${g.n}</small></div>`);
+      
+      document.getElementById('eco-list').innerHTML = db.ecos.map(e => `<div class="eco-item" onclick="this.querySelector('.eco-detail').style.display = (this.querySelector('.eco-detail').style.display=='block'?'none':'block')"><h4>${e.t}</h4><div class="eco-detail"><img src="${e.i}"><p>${e.d}</p><br><a href="${e.p}" target="_blank" class="btn-main" style="text-decoration:none; display:inline-block">Apri PDF</a></div></div>`).join('');
+      document.getElementById('render-arch').innerHTML = db.roles.map(r => `<div class="acc-item"><div class="acc-header" onclick="this.nextElementSibling.classList.toggle('open')"><h3>${r.t}</h3><span>${r.d}</span></div><div class="acc-content">${r.i ? `<img src="${r.i}" class="role-img">` : ''}<div class="acc-body">${r.c}</div></div></div>`).join('');
+      const bld = (id, data, tpl) => document.getElementById(id).innerHTML = data.map(tpl).join('');
+      bld('render-bond', db.bonds, b => `<div class="info-card"><span class="tag">${b.r}</span><h4>${b.n}</h4><p>${b.d}</p></div>`);
+      bld('render-tal', db.talents, t => `<div class="info-card"><span class="tag">${t.t}</span><h4>${t.n}</h4><p>${t.d}</p></div>`);
+      bld('render-inv', db.inv, i => `<div class="info-card"><span class="tag">Oggetto</span><h4>${i.n}</h4><p>${i.d}</p></div>`);
+      bld('render-dark', db.dark, d => `<div class="info-card"><span class="tag">${d.t}</span><h4>${d.n}</h4><p>${d.d}</p></div>`);
       refreshLists();
     }
 
-    function exportForGithub() {
-        let currentCode = document.documentElement.outerHTML;
-        let dataString = `let db = JSON.parse(localStorage.getItem('veyla_soul_v7')) || ${JSON.stringify(db, null, 2)};`;
-        let updatedCode = currentCode.replace(/let db = JSON\.parse\(.*?\)\s*\|\|\s*\{[\s\S]*?\};/, dataString);
-        navigator.clipboard.writeText("<!DOCTYPE html>\n" + updatedCode).then(() => { alert("CODICE COPIATO! Vai su GitHub, clicca index.html, premi la matita, cancella tutto, incolla e salva."); });
+    function revealEco() {
+        const list = document.getElementById('eco-list');
+        const sq = document.getElementById('m-square');
+        sq.style.opacity = '0';
+        setTimeout(() => { sq.style.display = 'none'; list.style.display = 'block'; setTimeout(() => list.style.opacity = '1', 50); }, 500);
     }
 
+    function openAdmin() { if(prompt("Chiave d'Avorio:") === "222") document.getElementById('admin-ui').style.display='block'; }
+    function closeAdmin() { document.getElementById('admin-ui').style.display='none'; }
+    function swView(id) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active')); document.getElementById(id).classList.add('active'); event.target.classList.add('active'); }
+    function swTab(id) { document.querySelectorAll('.adm-panel').forEach(p => p.style.display='none'); document.querySelectorAll('.v-tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).style.display='block'; event.target.classList.add('active'); }
+    
     function saveGen() {
         db.name = document.getElementById('in-name').value;
         db.av = document.getElementById('in-av').value;
         db.yt = document.getElementById('in-yt').value;
         db.track = document.getElementById('in-track').value;
         db.bio = document.getElementById('in-bio').value;
-        save(); render(); alert("Salvato in locale! Ricorda di sincronizzare su GitHub per aggiornare il link pubblico.");
+        save(); render(); alert("Salvato Locale!");
     }
 
     function saveItem(key, fields, prefix) {
@@ -258,20 +231,20 @@
         save(); render();
     }
 
-    function swView(id) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active')); document.getElementById(id).classList.add('active'); event.target.classList.add('active'); }
-    function openAdmin() { if(prompt("Chiave d'Avorio:") === "222") { document.getElementById('admin-ui').style.display='block'; document.getElementById('in-name').value = db.name; document.getElementById('in-av').value = db.av; document.getElementById('in-yt').value = db.yt; document.getElementById('in-track').value = db.track; document.getElementById('in-bio').value = db.bio; }}
-    function closeAdmin() { document.getElementById('admin-ui').style.display='none'; }
-    function swTab(id) { document.querySelectorAll('.adm-panel').forEach(p => p.style.display='none'); document.querySelectorAll('.v-tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).style.display='block'; event.target.classList.add('active'); }
-    function startEdit(key, prefix, fields, idx) { document.getElementById(`edit-${prefix}-idx`).value = idx; fields.forEach(f => document.getElementById(`${prefix}-${f}`).value = db[key][idx][f]); }
-    function delItem(key, idx) { if(confirm("Eliminare?")) { db[key].splice(idx,1); save(); render(); }}
-    function refreshLists() {
-        const lb = (id, key, prefix, fields) => { document.getElementById(id).innerHTML = db[key].map((item, i) => `<div class="admin-list-item"><span>${item.n || item.t}</span><div><button class="btn-main" style="padding:5px" onclick="startEdit('${key}','${prefix}',${JSON.stringify(fields)},${i})">Edit</button><button class="btn-main" style="padding:5px; background:red" onclick="delItem('${key}',${i})">Del</button></div></div>`).join(''); };
-        lb('list-arch','roles','arch',['t','d','i','c']); lb('list-bond','bonds','bond',['n','r','d']); lb('list-tal','talents','tal',['n','t','d']); lb('list-inv','inv','inv',['n','d']); lb('list-dark','dark','dark',['n','t','d']);
+    function exportForGithub() {
+        let currentCode = document.documentElement.outerHTML;
+        let dataString = `let db = JSON.parse(localStorage.getItem('veyla_soul_v9')) || ${JSON.stringify(db, null, 2)};`;
+        let updatedCode = currentCode.replace(/let db = JSON\.parse\(.*?\)\s*\|\|\s*\{[\s\S]*?\};/, dataString);
+        navigator.clipboard.writeText("<!DOCTYPE html>\n" + updatedCode).then(() => { alert("CODICE COPIATO! Incollalo su GitHub."); });
     }
-    function addGuest() { const n = document.getElementById('g-name').value; const m = document.getElementById('g-msg').value; if(n && m) { db.guest.push({n, m}); save(); render(); } }
-    function save() { localStorage.setItem('veyla_soul_v7', JSON.stringify(db)); }
+
+    function refreshLists() {
+        const lb = (id, k, pre) => { document.getElementById(id).innerHTML = db[k].map((item, i) => `<div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #eee;"><span>${item.t || item.n}</span><button class="btn-main" style="background:red; padding:5px" onclick="delItem('${k}',${i})">Elimina</button></div>`).join(''); };
+        lb('list-eco','ecos','eco'); lb('list-arch','roles','arch'); lb('list-bond','bonds','bond');
+    }
+    function delItem(k, i) { if(confirm("Eliminare?")) { db[k].splice(i,1); save(); render(); } }
+    function save() { localStorage.setItem('veyla_soul_v9', JSON.stringify(db)); }
     render();
   </script>
-
-
-</body></html>
+</body>
+</html>
