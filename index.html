@@ -56,11 +56,8 @@
     .acc-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 20px 0; transition: 0.3s; }
     .acc-header:hover { color: var(--dust-rose); }
     .acc-header h3 { font-family: var(--font-display); font-size: 1.8rem; font-weight: 400; }
-    .acc-header span { font-family: 'Montserrat'; font-size: 0.6rem; color: #bbb; letter-spacing: 1px; }
     .acc-content { max-height: 0; overflow: hidden; transition: max-height 0.6s ease-out; background: rgba(255,255,255,0.3); }
     .acc-content.open { max-height: 10000px; padding: 20px 0 40px; }
-    
-    /* Immagine interna alla role */
     .role-img { width: 100%; max-height: 500px; object-fit: cover; margin-bottom: 25px; border: 1px solid var(--silk-border); display: block; }
     .acc-body { font-size: 1.35rem; line-height: 1.8; text-align: justify; white-space: pre-wrap; padding: 0 10px; }
 
@@ -91,7 +88,7 @@
   <header class="top-bar">
     <div class="music-controls">
       <button id="toggle-play" onclick="controlMusic()"><i class="fa-solid fa-play"></i></button>
-      <div class="marquee-box"><div class="marquee-text" id="ui-track">Veyla's Theme</div></div>
+      <div class="marquee-box"><div class="marquee-text" id="ui-track">In attesa...</div></div>
     </div>
     <div style="font-family: 'Montserrat'; font-size: 0.6rem; letter-spacing: 4px; color: #999;">VEYLA HAWSTEIN</div>
   </header>
@@ -168,7 +165,7 @@
 
     <div id="adm-gen" class="adm-panel">
       <div class="admin-box">
-        <input type="text" id="in-name" placeholder="Nome Personaggio">
+        <input type="text" id="in-name" placeholder="Nome">
         <input type="text" id="in-av" placeholder="Avatar URL">
         <input type="text" id="in-yt" placeholder="YouTube Video ID">
         <input type="text" id="in-track" placeholder="Titolo Traccia">
@@ -181,10 +178,10 @@
       <div class="admin-box">
         <input type="hidden" id="edit-arch-idx" value="-1">
         <input type="text" id="arch-t" placeholder="Titolo della Role">
-        <input type="text" id="arch-d" placeholder="Data (es: Autunno 1920)">
+        <input type="text" id="arch-d" placeholder="Data">
         <input type="text" id="arch-i" placeholder="Link Immagine (Imgur/Pinterest)">
         <textarea id="arch-c" placeholder="Estratto del Post..." rows="8"></textarea>
-        <button class="btn-main" onclick="saveItem('roles',['t','d','i','c'],'arch')">Salva Memory</button>
+        <button class="btn-main" onclick="saveItem('roles',['t','d','i','c'],'arch')">Salva Role</button>
       </div>
       <div id="list-arch"></div>
     </div>
@@ -203,7 +200,7 @@
     <div id="adm-tal" class="adm-panel" style="display:none">
       <div class="admin-box">
         <input type="hidden" id="edit-tal-idx" value="-1">
-        <input type="text" id="tal-n" placeholder="Nome Talento">
+        <input type="text" id="tal-n" placeholder="Nome">
         <select id="tal-t"><option value="Talento">Talento</option><option value="Specializzazione">Specializzazione</option></select>
         <textarea id="tal-d" placeholder="Descrizione"></textarea>
         <button class="btn-main" onclick="saveItem('talents',['n','t','d'],'tal')">Salva</button>
@@ -235,7 +232,7 @@
 
   <script src="https://www.youtube.com/iframe_api"></script>
   <script>
-    let db = JSON.parse(localStorage.getItem('veyla_soul_v5')) || {
+    let db = JSON.parse(localStorage.getItem('veyla_soul_v6')) || {
       name: "Veyla Hawstein", av: "https://i.imgur.com/example.jpg",
       yt: "dQw4w9WgXcQ", track: "Lana Del Rey - Young and Beautiful",
       bio: "La tua storia...",
@@ -265,7 +262,6 @@
       document.getElementById('ui-track').innerText = db.track;
       document.getElementById('d-bio').innerText = db.bio;
 
-      // Render Archivio Role con supporto Immagine
       document.getElementById('render-arch').innerHTML = db.roles.map((r,i) => `
         <div class="acc-item">
             <div class="acc-header" onclick="this.nextElementSibling.classList.toggle('open')">
@@ -277,32 +273,13 @@
             </div>
         </div>`).join('');
 
-      // Grids
       const build = (id, data, tpl) => document.getElementById(id).innerHTML = data.map(tpl).join('');
       build('render-bond', db.bonds, b => `<div class="info-card"><span class="tag">${b.r}</span><h4>${b.n}</h4><p>${b.d}</p></div>`);
       build('render-tal', db.talents, t => `<div class="info-card"><span class="tag">${t.t}</span><h4>${t.n}</h4><p>${t.d}</p></div>`);
       build('render-inv', db.inv, i => `<div class="info-card"><span class="tag">Oggetto</span><h4>${i.n}</h4><p>${i.d}</p></div>`);
       build('render-dark', db.dark, d => `<div class="info-card"><span class="tag">${d.t}</span><h4>${d.n}</h4><p>${d.d}</p></div>`);
       build('render-guest', db.guest, g => `<div style="margin-bottom:15px; border-left:1px solid #d4a5a5; padding-left:10px"><em>"${g.m}"</em><br><small>— ${g.n}</small></div>`);
-
       refreshLists();
-    }
-
-    function swView(id) {
-      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-      document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      event.target.classList.add('active');
-    }
-
-    function openAdmin() { if(prompt("Chiave d'Avorio:") === "222") document.getElementById('admin-ui').style.display='block'; }
-    function closeAdmin() { document.getElementById('admin-ui').style.display='none'; }
-
-    function swTab(id) {
-        document.querySelectorAll('.adm-panel').forEach(p => p.style.display='none');
-        document.querySelectorAll('.v-tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).style.display='block';
-        event.target.classList.add('active');
     }
 
     function saveGen() {
@@ -311,7 +288,10 @@
         db.yt = document.getElementById('in-yt').value;
         db.track = document.getElementById('in-track').value;
         db.bio = document.getElementById('in-bio').value;
-        save(); location.reload();
+        
+        localStorage.setItem('veyla_soul_v6', JSON.stringify(db));
+        render(); // Aggiorna l'interfaccia senza ricaricare
+        alert("Dati Generali Salvati!");
     }
 
     function saveItem(key, fields, prefix) {
@@ -326,13 +306,26 @@
         save(); render();
     }
 
+    function swView(id) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    function openAdmin() { if(prompt("Chiave d'Avorio:") === "222") document.getElementById('admin-ui').style.display='block'; }
+    function closeAdmin() { document.getElementById('admin-ui').style.display='none'; }
+    function swTab(id) {
+        document.querySelectorAll('.adm-panel').forEach(p => p.style.display='none');
+        document.querySelectorAll('.v-tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).style.display='block';
+        event.target.classList.add('active');
+    }
     function startEdit(key, prefix, fields, idx) {
         document.getElementById(`edit-${prefix}-idx`).value = idx;
         fields.forEach(f => document.getElementById(`${prefix}-${f}`).value = db[key][idx][f]);
     }
-
     function delItem(key, idx) { if(confirm("Eliminare?")) { db[key].splice(idx,1); save(); render(); }}
-
     function refreshLists() {
         const listBuild = (id, key, prefix, fields) => {
             document.getElementById(id).innerHTML = db[key].map((item, i) => `
@@ -350,14 +343,12 @@
         listBuild('list-inv','inv','inv',['n','d']);
         listBuild('list-dark','dark','dark',['n','t','d']);
     }
-
     function addGuest() {
         const n = document.getElementById('g-name').value;
         const m = document.getElementById('g-msg').value;
         if(n && m) { db.guest.push({n, m}); save(); render(); }
     }
-
-    function save() { localStorage.setItem('veyla_soul_v5', JSON.stringify(db)); }
+    function save() { localStorage.setItem('veyla_soul_v6', JSON.stringify(db)); }
     render();
   </script>
 </body>
